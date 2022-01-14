@@ -1,0 +1,23 @@
+{
+  "name": "file-management",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/pesarism/file-managment.git"
+  },
+  "author": "pesar",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/pesarism/file-managment/issues"
+  },
+  "homepage": "https://github.com/pesarism/file-managment#readme",
+  "dependencies": {
+    "fastify": "^3.25.3",
+    "mongoose": "^6.1.6"
+  }
+}
