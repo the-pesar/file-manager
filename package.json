@@ -5,7 +5,7 @@
   "main": "app.js",
   "type": "commonjs",
   "scripts": {
-    "dev": "nodemon"
+    "dev": "nodemon src/app.js"
   },
   "repository": {
     "type": "git",
@@ -18,12 +18,20 @@
   },
   "homepage": "https://github.com/pesarism/file-managment#readme",
   "dependencies": {
+    "bcrypt": "^5.0.1",
     "colors": "^1.4.0",
     "dotenv": "^11.0.0",
     "fastify": "^3.25.3",
-    "mongoose": "^6.1.6"
+    "jsonwebtoken": "^8.5.1",
+    "kavenegar": "^1.1.4",
+    "module-alias": "^2.2.2",
+    "mongodb": "^4.3.0"
   },
   "devDependencies": {
     "nodemon": "^2.0.15"
+  },
+  "_moduleAliases": {
+    "@root": "./",
+    "@src": "./src"
   }
 }

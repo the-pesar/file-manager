@@ -1,5 +1,8 @@
-require("./plugins/index.js");
-const routes = require("./routes");
+require("module-alias/register");
+require("dotenv").config({ path: `${__dirname}/../.env` });
+require("@src/plugins/colors.js");
+
+const routes = require("@src/routes");
 
 const fastify = require("fastify")({
   logger: false,
@@ -11,3 +14,5 @@ fastify.listen(process.env.FASTIFY_PORT, (error, address) => {
   if (error) throw error;
   else console.log(`App is running on the ${address}`.cSuccess);
 });
+
+
