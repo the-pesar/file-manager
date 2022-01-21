@@ -1,10 +1,73 @@
-const fs = require("fs/promises");
-const path = require("path");
+const { mkdirSync, readdirSync, lstatSync } = require("fs");
+const { join } = require("path");
 
-class FileManagment {
-  async initUserDirectory(username) {
-    fs.mkdir(path.join(__dirname, "/../../cloud/", username))
+const byteConvertor = (byte, to) => {
+  return {
+    kb: (byte) => byte / 1000,
+    mb: (byte) => byte / 1000 / 1000,
+    gb: (byte) => byte / 1000 / 1000 / 1000,
+    tb: (byte) => byte / 1000 / 1000 / 1000 / 1000,
   }
-}
+    [to](byte)
+    .toFixed(2);
+};
 
-module.exports = FileManagment;
+const setValidSize = (size) => {
+  if (size <= 100000) return byteConvertor(size, "kb") + "Kb";
+  if (size <= 100000000) return byteConvertor(size, "mb") + "Mb";
+  if (size <= 100000000000) return byteConvertor(size, "gb") + "Gb";
+  if (size <= 100000000000000) return byteConvertor(size, "tb") + "Tb";
+  else return -1;
+};
+
+const initUserDirectory = async (username) => {
+  mkdirSync(join(__dirname, "/../../cloud/", username));
+};
+const checkNameAndSuffix = (name, info) => {
+  let suffix = "";
+
+  if (info.isDirectory()) {
+    suffix = "";
+  } else {
+    suffix = name.split(".").at(-1);
+    name = name.slice(0, name.search(suffix) - 1);
+  }
+  return { name, suffix };
+};
+const getContentUserPath = async (request, reply) => {
+  try {
+    const { path, username } = request.body;
+
+    const checkSec = path.indexOf("../");
+
+    if (checkSec !== -1) {
+      reply.status(403).send({ msg: "security" });
+      return;
+    }
+
+    let content = readdirSync(join(__dirname, "/../../cloud/", username, path));
+
+    content = content.map((item) => {
+      const info = lstatSync(
+        join(__dirname, "/../../cloud/", username, "/", path, item)
+      );
+
+      const { name, suffix } = checkNameAndSuffix(item, info);
+      const type = info.isDirectory() ? "directory" : "file";
+
+      return {
+        name,
+        suffix,
+        size: type === "file" ? setValidSize(info.size) : "",
+        type,
+      };
+    });
+
+    reply.send({ msg: "ok", content });
+  } catch (err) {
+    console.log(err);
+    reply.send({ msg: "directory not exists" });
+  }
+};
+
+module.exports = { initUserDirectory, getContentUserPath };
