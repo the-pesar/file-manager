@@ -20,10 +20,7 @@ const setValidSize = (size) => {
   else return -1;
 };
 
-const initUserDirectory = async (username) => {
-  mkdirSync(join(__dirname, "/../../cloud/", username));
-};
-const checkNameAndSuffix = (name, info) => {
+const setNameAndSuffix = (name, info) => {
   let suffix = "";
 
   if (info.isDirectory()) {
@@ -34,9 +31,10 @@ const checkNameAndSuffix = (name, info) => {
   }
   return { name, suffix };
 };
-const getContentUserPath = async (request, reply) => {
+
+const getContentPath = async (request, reply) => {
   try {
-    const { path, username } = request.body;
+    const { path } = request.body;
 
     const checkSec = path.indexOf("../");
 
@@ -45,14 +43,12 @@ const getContentUserPath = async (request, reply) => {
       return;
     }
 
-    let content = readdirSync(join(__dirname, "/../../cloud/", username, path));
+    let content = readdirSync(join(__dirname, "/../../cloud", path));
 
     content = content.map((item) => {
-      const info = lstatSync(
-        join(__dirname, "/../../cloud/", username, "/", path, item)
-      );
+      const info = lstatSync(join(__dirname, "/../../cloud/", path, item));
 
-      const { name, suffix } = checkNameAndSuffix(item, info);
+      const { name, suffix } = setNameAndSuffix(item, info);
       const type = info.isDirectory() ? "directory" : "file";
 
       return {
@@ -70,4 +66,4 @@ const getContentUserPath = async (request, reply) => {
   }
 };
 
-module.exports = { initUserDirectory, getContentUserPath };
+module.exports = { getContentPath };

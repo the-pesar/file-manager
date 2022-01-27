@@ -11,6 +11,7 @@ const fastify = require("fastify")({
 });
 
 fastify.register(routes, { prefix: "v1" });
+fastify.register(require("fastify-cors"), { origin: "*" });
 
 const checkCloud = existsSync(path.join(__dirname, "/../cloud"));
 

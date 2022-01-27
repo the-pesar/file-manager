@@ -22,10 +22,8 @@
     "colors": "^1.4.0",
     "dotenv": "^11.0.0",
     "fastify": "^3.25.3",
-    "jsonwebtoken": "^8.5.1",
-    "kavenegar": "^1.1.4",
-    "module-alias": "^2.2.2",
-    "mongodb": "^4.3.0"
+    "fastify-cors": "^6.0.2",
+    "module-alias": "^2.2.2"
   },
   "devDependencies": {
     "nodemon": "^2.0.15"
