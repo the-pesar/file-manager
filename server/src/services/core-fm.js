@@ -1,4 +1,5 @@
-const { mkdirSync, readdirSync, lstatSync } = require("fs");
+const { readdirSync, lstatSync } = require("fs");
+const { open, mkdir, rm, rmdir } = require("fs/promises");
 const { join } = require("path");
 
 const byteConvertor = (byte, to) => {
@@ -66,4 +67,39 @@ const getContentPath = async (request, reply) => {
   }
 };
 
-module.exports = { getContentPath };
+const createFile = (request, reply) => {
+  const { path, file } = request.body;
+
+  open(join(__dirname, "/../../cloud", path, file), "w")
+    .then(() => reply.send({ msg: "ok" }))
+    .catch((error) => reply.status(400).send({ msg: error }));
+};
+
+const createDirectory = (request, reply) => {
+  const { path, directory } = request.body;
+
+  mkdir(join(__dirname, "/../../cloud", path, directory))
+    .then(() => reply.send({ msg: "ok" }))
+    .catch((error) => reply.status(400).send({ msg: error }));
+};
+
+const rmFileDirectory = (request, reply) => {
+  const { path, type } = request.body;
+
+  if (type === "file") {
+    rm(join(__dirname, "/../../cloud", path))
+      .then(() => reply.send({ msg: "ok" }))
+      .catch((error) => reply.status(400).send({ msg: error }));
+  } else if (type === "directory") {
+    rmdir(join(__dirname, "/../../cloud", path))
+      .then(() => reply.send({ msg: "ok" }))
+      .catch((error) => reply.status(400).send({ msg: error }));
+  }
+};
+
+module.exports = {
+  getContentPath,
+  createFile,
+  createDirectory,
+  rmFileDirectory,
+};
